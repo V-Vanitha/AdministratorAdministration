@@ -1156,7 +1156,7 @@ paths:
                           type: string
                           description: >
                             'Operation for approving the OaM requests
-                            from [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-op-s-is-004/layer-protocol=0/operation-server-interface-1-0:operation-server-interface-pac/operation-server-interface-capability/operation-name]'
+                            from [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-op-s-is-005/layer-protocol=0/operation-server-interface-1-0:operation-server-interface-pac/operation-server-interface-capability/operation-name]'
                         oam-approval-protocol:
                           type: string
                           description: >
@@ -1267,7 +1267,7 @@ paths:
                           type: string
                           description: >
                             'Name of the operation, which is made available via the link
-                            from [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-op-s-is-004/layer-protocol=0/operation-server-interface-1-0:operation-server-interface-pac/operation-server-interface-capability/operation-name]'
+                            from [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-op-s-is-005/layer-protocol=0/operation-server-interface-1-0:operation-server-interface-pac/operation-server-interface-capability/operation-name]'
                         consuming-application-name:
                           type: string
                           description: >
@@ -1570,13 +1570,13 @@ paths:
                   type: string
                   description: >
                     'Name of application inquiring for approval an OaM request
-                    find [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]'
+                    find in [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name], and in LOADfile'
                 release-number:
                   type: string
                   pattern: '^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})$'
                   description: >
                     'Release of application inquiring for approval an OaM request
-                    find [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number]'
+                    find in [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number], but ignore during authentication with LOADfile'
                 Authorization:
                   type: string
                   description: >
@@ -1615,11 +1615,11 @@ paths:
                     description: >
                       'Would be true, IF
                       {$request.body#application-name} could be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]
-                      AND {$request.body#release-number} could be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number]'
+                      AND {$request.body#release-number} could be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number]
                       for the same value of uuid1
                       AND {$request.body#Authorization} could be found in LOADfile
                       AND method would be covered by LOADfile content
-                      of the same value of uuid2.
+                      of the same value of uuid1.
                       Otherwise, would be false.'
                   reason-of-objection:
                     type: string
@@ -1720,13 +1720,13 @@ paths:
                       type: string
                       description: >
                         'Name of application inquiring for approval of the OaM request
-                        find in LOADfile'
+                        find in [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name], and in LOADfile'
                     release-number:
                       type: string
                       pattern: '^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})$'
                       description: >
                         'Release of application inquiring for approval of the OaM request
-                        find in LOADfile'
+                        find in [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number], but ignore during authentication with LOADfile'
                     method:
                       type: string
                       enum:
@@ -1760,13 +1760,13 @@ paths:
                       type: string
                       description: >
                         'Name of application inquiring for approval of the BasicAuth request
-                        find in LOADfile'
+                        find in [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name], and in LOADfile'
                     release-number:
                       type: string
                       pattern: '^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})$'
                       description: >
                         'Release of application inquiring for approval of the BasicAuth request
-                        find in LOADfile'
+                        find in [/core-model-1-4:control-construct/logical-termination-point=aa-2-1-0-http-c-*/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number], but ignore during authentication with LOADfile'
                     operation-name:
                       type: string
                       description: >
@@ -1818,7 +1818,11 @@ paths:
                         type: boolean
                         description: >
                           'Would be true, IF
-                          tuple of {$request.body#application-name, $request.body#release-number, $request.body#method} could be found for {$request.body#Authorization} in LOADfile'
+                          ( {$request.body#application-name} could be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]
+                            AND {$request.body#release-number} could be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number]
+                            for the same value of uuid1 )
+                          AND
+                          ( tuple of {$request.body#application-name, $request.body#method} could be found for {$request.body#Authorization} in LOADfile ) '
                   - description: 'IF requestBody according to old-oam-format AND {$request.response#oam-request-is-approved}==false (to be deleted with AA v3.0.0)'
                     type: object
                     required:
@@ -1829,8 +1833,12 @@ paths:
                         type: boolean
                         description: >
                           'Would be false, IF
-                          {$request.body#Authorization} not in LOADfile
-                          OR tuple of {$request.body#application-name, $request.body#release-number, $request.body#method} could NOT be found for {$request.body#Authorization} in LOADfile
+                            {$request.body#Authorization} NOT in LOADfile
+                          OR 
+                            ( {$request.body#application-name} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]
+                            AND {$request.body#release-number} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number] )
+                          OR
+                            tuple of {$request.body#application-name, $request.body#method} could NOT be found for {$request.body#Authorization} in LOADfile
                           Attribute to be deleted with AA v3.0.0.'
                       reason-of-objection:
                         type: string
@@ -1852,7 +1860,11 @@ paths:
                         type: boolean
                         description: >
                           'Would be true, IF
-                          tuple of {$request.body#application-name, $request.body#release-number, $request.body#operation-name, $request.body#method} could be found for {$request.body#Authorization} in LOADfile'
+                          ( {$request.body#application-name} could be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]
+                            AND {$request.body#release-number} could be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number]
+                            for the same value of uuid1 )
+                          AND
+                          ( tuple of {$request.body#application-name, $request.body#operation-name, $request.body#method} could be found for {$request.body#Authorization} in LOADfile ) '
                   - description: 'IF requestBody according to new-basic-auth-format AND {$request.response#basic-auth-request-is-approved}==false'
                     type: object
                     required:
@@ -1863,8 +1875,12 @@ paths:
                         type: boolean
                         description: >
                           'Would be false, IF
-                          {$request.body#Authorization} not in LOADfile
-                          OR tuple of {$request.body#application-name, $request.body#release-number, $request.body#operation-name, $request.body#method} could NOT be found for {$request.body#Authorization} in LOADfile'
+                            {$request.body#Authorization} NOT in LOADfile
+                          OR 
+                            ( {$request.body#application-name} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]
+                            AND {$request.body#release-number} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number] )
+                          OR
+                            tuple of {$request.body#application-name, $request.body#operation-name, $request.body#method} could NOT be found for {$request.body#Authorization} in LOADfile'
                       reason-of-objection:
                         type: string
                         enum:
