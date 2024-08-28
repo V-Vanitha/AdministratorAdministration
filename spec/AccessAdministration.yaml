@@ -1835,7 +1835,7 @@ paths:
                         description: >
                           'Would be false, IF
                             {$request.body#Authorization} NOT in LOADfile
-                          OR 
+                          OR
                             ( {$request.body#application-name} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]
                             AND {$request.body#release-number} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number] )
                           OR
@@ -1877,7 +1877,7 @@ paths:
                         description: >
                           'Would be false, IF
                             {$request.body#Authorization} NOT in LOADfile
-                          OR 
+                          OR
                             ( {$request.body#application-name} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/application-name]
                             AND {$request.body#release-number} could NOT be found in [/core-model-1-4:control-construct/logical-termination-point={uuid1}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-configuration/release-number] )
                           OR
