@@ -170,3 +170,11 @@ profile-instances:
       maximum: 20
     configuration:
       integer-value: 5
+
+  - profile-name: 'StringProfile'
+    uuid: 'aa-2-1-2-string-p-001'
+    capability:
+      string-name: 'NameOfOperationForInquiringApprovals'
+      pattern: '^\/v([1-9]{1,1})([0-9]{0,1})\/([a-z\-]{6,})$'
+    configuration:
+      string-value: '/v1/inquire-basic-auth-approvals'

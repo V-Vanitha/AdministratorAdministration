@@ -287,22 +287,3 @@ clients:
       service:
         basic:
         individual:
-
-  - http-client:
-      application-name: requestBody#application-name
-      release-number: requestBody#release-number
-      uuid:
-    tcp-client:
-      remote-protocol:
-      ip-address:
-      tcp-port:
-      uuid:
-    operation-clients:
-      own-oam:
-        basic:
-        individual:
-          - operation-name: /v1/inquire-basic-auth-approvals
-            uuid: aa-2-1-2-op-c-im-all-1-0-0-999
-      service:
-        basic:
-        individual:
