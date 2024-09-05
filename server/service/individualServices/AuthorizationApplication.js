@@ -3,11 +3,12 @@
  * @module AuthorizationApplication
  **/
 const fs = require('fs');
+const controlConstruct = require('onf-core-model-ap/applicationPattern/onfModel/models/ControlConstruct'); 
+const onfAttributes= require('onf-core-model-ap/applicationPattern/onfModel/constants/OnfAttributes')
 const administratorList = 'administrator-credential-list';
 const allowedSccess = "allowed-access";
 const authorizationValue = 'auth-code';
 const FileprofileOperation = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/FileProfile')
-
 /**
  * @description This function returns the approval status for the provided application .
  * @param {String} authorization : authorization code of the user , value should be Bse64 Encoding of username and password 
@@ -27,12 +28,8 @@ exports.isAuthorizationExistAsync = async function (authorization) {
                 for (let i = 0; i < registeredApplicationList.length; i++) {
                     let registeredApplication = registeredApplicationList[i];
                     let _authorization = registeredApplication[authorizationValue];
-
                     if (_authorization == authorization) {
                         isAuthorizationExist = true;
-
-
-
                     }
                 }
             }
@@ -53,7 +50,7 @@ exports.isAuthorizationExistAsync = async function (authorization) {
  * @param {String} allowedMethodsValue: allowedMethodsValue allowed methods as per the allowedMethodsEnum.
  * @returns string {approvalStatus}
  **/
-exports.isAuthorizedAsync = async function (applicationName, applicationReleaseNumber, authorization, allowedMethods) {
+exports.isAuthorizedAsync = async function (applicationName, authorization, allowedMethods) {
     try {
         let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent()
         if (applicationDataFile !== undefined) {
@@ -64,7 +61,7 @@ exports.isAuthorizedAsync = async function (applicationName, applicationReleaseN
                     let registeredApplication = registeredApplicationList[i];
                     let _authorization = registeredApplication[authorizationValue];
                     if (_authorization == authorization) {
-                        const auth = await ApplicationandReleaseNumber(applicationName, applicationReleaseNumber, authorization)
+                        const auth = await ApplicationandReleaseNumber(applicationName, authorization)
                         let _allowedMethodsList = auth["allowed-methods"]
                         for (let _allowedMethods of _allowedMethodsList) {
                             if ((_allowedMethods == allowedMethods || _allowedMethods == "ALL" || _allowedMethods == "*")) {
@@ -83,7 +80,7 @@ exports.isAuthorizedAsync = async function (applicationName, applicationReleaseN
     return false;
 }
 
-exports.isOpeartionisExistAsync = async function (applicationName, applicationReleaseNumber, operationName, authorization) {
+exports.isOpeartionisExistAsync = async function (applicationName, operationName, authorization) {
     let isoperationExit = false;
 
     try {
@@ -96,7 +93,7 @@ exports.isOpeartionisExistAsync = async function (applicationName, applicationRe
                     let registeredApplication = registeredApplicationList[i];
                     let _authorization = registeredApplication[authorizationValue]
                     if (_authorization == authorization) {
-                        const auth = await ApplicationandReleaseNumber(applicationName, applicationReleaseNumber, authorization)
+                        const auth = await ApplicationandReleaseNumber(applicationName, authorization)
                         let _allowedOperationList = auth["allowed-operations"]
                         for (let _allowedOperation of _allowedOperationList) {
                             let isallowedOperationNameStartswithnewtwork = _allowedOperation.match(/(network-control-domain)+/g)
@@ -218,13 +215,15 @@ exports.isOpeartionisExistAsync = async function (applicationName, applicationRe
     }
 }
 
-exports.IsApplicationExists = async function (applicationaName, ReleaseNumber, authorization) {
+exports.IsApplicationExists = async function (applicationaName, releaseNumber,authorization) {
     let isApplicationNameExit = false
-    let isReleaseNumberExit = false
+    let  isReleaseNumberExit = false
+
     try {
         let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent()
         if (applicationDataFile !== undefined) {
             let applicationData = JSON.parse(fs.readFileSync(applicationDataFile, 'utf8'));
+            const IsApplicationExistsIntheConfigFile= await getApplicationandReleaseNumberAtConfigFile(applicationaName,releaseNumber)
             if (applicationData[administratorList]) {
                 let registeredApplicationList = applicationData[administratorList];
                 for (let i = 0; i < registeredApplicationList.length; i++) {
@@ -233,10 +232,9 @@ exports.IsApplicationExists = async function (applicationaName, ReleaseNumber, a
                     let allowAcees = registeredApplication[allowedSccess]
                     for (let ApplicationNameandreleaseList of allowAcees) {
                         let _applicationName = ApplicationNameandreleaseList["application-name"]
-                        let _releaseNumber = ApplicationNameandreleaseList["release-number"]
-                        if (_authorization == authorization && (_applicationName == applicationaName || _applicationName == "*")) {
+                        if (_authorization == authorization && (_applicationName == applicationaName || _applicationName == "*") && IsApplicationExistsIntheConfigFile.isApplicationNameExit == true) {
                             isApplicationNameExit = true
-                            if (_authorization == authorization && (_releaseNumber == ReleaseNumber || _releaseNumber == "*")) {
+                            if (IsApplicationExistsIntheConfigFile.isReleaseNumberExit) {
                                 isReleaseNumberExit = true
 
                             }
@@ -254,7 +252,7 @@ exports.IsApplicationExists = async function (applicationaName, ReleaseNumber, a
     }
 }
 
-async function ApplicationandReleaseNumber(applicationaName, ReleaseNumber, authorization) {
+async function ApplicationandReleaseNumber(applicationaName, authorization) {
     let isApplicationNameExit = {};
     try {
         let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent();
@@ -268,8 +266,7 @@ async function ApplicationandReleaseNumber(applicationaName, ReleaseNumber, auth
                     let allowAcees = registeredApplication[allowedSccess]
                     for (let ApplicationNameandreleaseList of allowAcees) {
                         let _applicationName = ApplicationNameandreleaseList["application-name"]
-                        let _releaseNumber = ApplicationNameandreleaseList["release-number"]
-                        if (_authorization == authorization && (_applicationName == applicationaName || _applicationName == "*" || _applicationName == "ALL") && (_releaseNumber == ReleaseNumber || _releaseNumber == "*" || _releaseNumber == "ALL")) {
+                        if (_authorization == authorization && (_applicationName == applicationaName || _applicationName == "*" || _applicationName == "ALL") ) {
                             isApplicationNameExit = ApplicationNameandreleaseList;
                         }
                     }
@@ -280,4 +277,42 @@ async function ApplicationandReleaseNumber(applicationaName, ReleaseNumber, auth
         console.log(err);
     }    
     return isApplicationNameExit;
+}
+
+
+async function  getApplicationandReleaseNumberAtConfigFile(applicationName, releaseNumber) {
+    try{
+    let isApplicationNameExit = false
+    let isReleaseNumberExit = false
+    let logicalTerminationPointList = await controlConstruct.getLogicalTerminationPointListAsync(
+        layerProtocol.layerProtocolNameEnum.HTTP_CLIENT);
+    if (logicalTerminationPointList != undefined) {
+        for (let i = 0; i < logicalTerminationPointList.length; i++) {
+            let logicalTerminationPoint = logicalTerminationPointList[i];
+            let layerProtocol = logicalTerminationPoint[
+                onfAttributes.LOGICAL_TERMINATION_POINT.LAYER_PROTOCOL][0];
+            let httpClientPac = layerProtocol[
+                onfAttributes.LAYER_PROTOCOL.HTTP_CLIENT_INTERFACE_PAC];
+            if (httpClientPac != undefined) {
+                let httpClientConfiguration = httpClientPac[onfAttributes.HTTP_CLIENT.CONFIGURATION];
+                let _applicationName = httpClientConfiguration[onfAttributes.HTTP_CLIENT.APPLICATION_NAME];
+                let _releaseNumber = httpClientConfiguration[onfAttributes.HTTP_CLIENT.RELEASE_NUMBER];
+                if (_applicationName != undefined && _applicationName == applicationName) {
+                     isApplicationNameExit = true
+                    if (_releaseNumber != undefined &&
+                        (releaseNumber == undefined || _releaseNumber == releaseNumber)) {
+                       isReleaseNumberExit=true
+                    }
+                }
+            }
+        }
+    }
+    return {
+        isApplicationNameExit,
+        isReleaseNumberExit
+    }
+}
+catch(err){
+    console.log(err);
+}
 }

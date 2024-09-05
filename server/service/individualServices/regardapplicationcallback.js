@@ -11,16 +11,19 @@ const FcPort = require('onf-core-model-ap/applicationPattern/onfModel/models/FcP
 const forwardingConstructAutomationInput = require('onf-core-model-ap/applicationPattern/onfModel/services/models/forwardingConstruct/AutomationInput');
 const httpClientInterface = require('onf-core-model-ap/applicationPattern/onfModel/models/layerProtocols/HttpClientInterface');
 const logicalTerminationPoint = require('onf-core-model-ap/applicationPattern/onfModel/models/LogicalTerminationPoint');
+const stringProfile= require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
 
 exports.CreateLinkForInquiringBasicAuthApprovals = async function (applicationName, releaseNumber, reqheaders) {
     return new Promise(async function (resolve, reject) {
         try {
             let InquiringOamRequestCreateLinkForwardingName = "RegardApplicationCausesSequenceForInquiringBasicAuthRequestApprovals.CreateLinkForInquiringBasicAuthApprovals";
             let InquiringOamRequestCreateLinkRequestBody = {};
-
+            let stringProfileList = await stringProfile.getStringProfile('aa-2-1-2-string-p-001')
+           let inquireBasicAuthOperationName=stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
+           
             InquiringOamRequestCreateLinkRequestBody.servingApplicationName = applicationName;
             InquiringOamRequestCreateLinkRequestBody.servingApplicationReleaseNumber = releaseNumber;
-            InquiringOamRequestCreateLinkRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-0-op-s-bm-012");
+            InquiringOamRequestCreateLinkRequestBody.operationName = inquireBasicAuthOperationName;
             InquiringOamRequestCreateLinkRequestBody.consumingApplicationName = await HttpServerInterface.getApplicationNameAsync();
             InquiringOamRequestCreateLinkRequestBody.consumingApplicationReleaseNumber = await HttpServerInterface.getReleaseNumberAsync();
 
@@ -38,7 +41,9 @@ exports.CreateLinkForInquiringBasicAuthApprovals = async function (applicationNa
                 reqheaders.customerJourney
 
             )
+           
             resolve(response.data)
+            
         }
         catch (error) {
             reject(error);
@@ -55,7 +60,7 @@ exports.RequestForInquiringBasicAuthApprovals = async function (applicationName,
             let RequestForInquiringBasicAuthCreateLinkForApproveRequestBody = {};
             RequestForInquiringBasicAuthCreateLinkForApproveRequestBody.applicationName = await HttpServerInterface.getApplicationNameAsync();
             RequestForInquiringBasicAuthCreateLinkForApproveRequestBody.releaseNumber = await HttpServerInterface.getReleaseNumberAsync();
-            RequestForInquiringBasicAuthCreateLinkForApproveRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-0-op-s-is-005");
+            RequestForInquiringBasicAuthCreateLinkForApproveRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-2-op-s-is-005");
             RequestForInquiringBasicAuthCreateLinkForApproveRequestBody.address = await tcpServerInterface.getLocalAddressForForwarding();
             RequestForInquiringBasicAuthCreateLinkForApproveRequestBody.port = await tcpServerInterface.getLocalPort();
             RequestForInquiringBasicAuthCreateLinkForApproveRequestBody.protocol = await tcpServerInterface.getLocalProtocol();
@@ -94,7 +99,7 @@ exports.CreateLinkForApprovingBasicAuthRequests = async function (applicationNam
             let CreateLinkForApprovingBasicAuthRequestsApproveRequestBody = {};
             CreateLinkForApprovingBasicAuthRequestsApproveRequestBody.servingApplicationName = await HttpServerInterface.getApplicationNameAsync();
             CreateLinkForApprovingBasicAuthRequestsApproveRequestBody.servingApplicationReleaseNumber = await HttpServerInterface.getReleaseNumberAsync();
-            CreateLinkForApprovingBasicAuthRequestsApproveRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-0-op-s-is-005");
+            CreateLinkForApprovingBasicAuthRequestsApproveRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-2-op-s-is-005");
             CreateLinkForApprovingBasicAuthRequestsApproveRequestBody.consumingApplicationName = applicationName
             CreateLinkForApprovingBasicAuthRequestsApproveRequestBody.consumingApplicationReleaseNumber = releaseNumber
             CreateLinkForApprovingBasicAuthRequestsApproveRequestBody = onfAttributeFormatter.modifyJsonObjectKeysToKebabCase(CreateLinkForApprovingBasicAuthRequestsApproveRequestBody);
@@ -130,7 +135,7 @@ exports.CreateLinkForInquiringOamApprovals = async function (applicationName, re
             let InquiringOamRequestCreateLinkRequestBody = {};
             InquiringOamRequestCreateLinkRequestBody.servingApplicationName = applicationName;
             InquiringOamRequestCreateLinkRequestBody.servingApplicationReleaseNumber = releaseNumber;
-            InquiringOamRequestCreateLinkRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-0-op-s-bm-005");
+            InquiringOamRequestCreateLinkRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-2-op-s-bm-005");
             InquiringOamRequestCreateLinkRequestBody.consumingApplicationName = await HttpServerInterface.getApplicationNameAsync();
             InquiringOamRequestCreateLinkRequestBody.consumingApplicationReleaseNumber = await HttpServerInterface.getReleaseNumberAsync();
             InquiringOamRequestCreateLinkRequestBody = onfAttributeFormatter.modifyJsonObjectKeysToKebabCase(InquiringOamRequestCreateLinkRequestBody);
@@ -163,7 +168,7 @@ exports.RequestForInquiringOamApprovals = async function (applicationName, relea
             let InquiringOamRequestRequestBody = {};
             InquiringOamRequestRequestBody.oamApprovalApplication = await HttpServerInterface.getApplicationNameAsync();
             InquiringOamRequestRequestBody.oamApprovalApplicationReleaseNumber = await HttpServerInterface.getReleaseNumberAsync();
-            InquiringOamRequestRequestBody.oamApprovalOperation = await operationServerInterface.getOperationNameAsync("aa-2-1-0-op-s-is-004");
+            InquiringOamRequestRequestBody.oamApprovalOperation = await operationServerInterface.getOperationNameAsync("aa-2-1-2-op-s-is-005");
             InquiringOamRequestRequestBody.oamApprovalAddress = await tcpServerInterface.getLocalAddressForForwarding();
             InquiringOamRequestRequestBody.oamApprovalPort = await tcpServerInterface.getLocalPort();
             InquiringOamRequestRequestBody.oamApprovalProtocol = await tcpServerInterface.getLocalProtocol();
@@ -205,7 +210,7 @@ exports.CreateLinkForApprovingOamRequests = async function (applicationName, rel
             let InquiringOamRequestCreateLinkForApproveRequestBody = {};
             InquiringOamRequestCreateLinkForApproveRequestBody.servingApplicationName = await HttpServerInterface.getApplicationNameAsync();
             InquiringOamRequestCreateLinkForApproveRequestBody.servingApplicationReleaseNumber = await HttpServerInterface.getReleaseNumberAsync();
-            InquiringOamRequestCreateLinkForApproveRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-0-op-s-is-004");
+            InquiringOamRequestCreateLinkForApproveRequestBody.operationName = await operationServerInterface.getOperationNameAsync("aa-2-1-2-op-s-is-005");
             InquiringOamRequestCreateLinkForApproveRequestBody.consumingApplicationName = applicationName
             InquiringOamRequestCreateLinkForApproveRequestBody.consumingApplicationReleaseNumber = releaseNumber
             InquiringOamRequestCreateLinkForApproveRequestBody = onfAttributeFormatter.modifyJsonObjectKeysToKebabCase(InquiringOamRequestCreateLinkForApproveRequestBody);
