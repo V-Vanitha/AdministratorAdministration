@@ -18,7 +18,7 @@ const AdministratorCredentialList = require('./individualServices/AuthorizationA
 const createHttpError = require('http-errors');
 const TcpObject = require('onf-core-model-ap/applicationPattern/onfModel/services/models/TcpObject');
 const RegardApplication = require('./individualServices/RegardApplication')
-const stringProfile= require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
+const stringProfile = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
 const NEW_RELEASE_FORWARDING_NAME = 'PromptForBequeathingDataCausesTransferOfListOfApplications';
 const AsyncLock = require('async-lock');
 const lock = new AsyncLock();
@@ -54,7 +54,7 @@ exports.approveOamRequest = function (body) {
       let isFileExist = isAuthorizationExists.isFileExit;
       if (isAuthorizationExistValue && isFileExist) {
 
-        let isApplicationExists = await AdministratorCredentialList.IsApplicationExists(applicationName,applicationReleaseNumber, authorization)
+        let isApplicationExists = await AdministratorCredentialList.IsApplicationExists(applicationName, applicationReleaseNumber, authorization)
         if (isApplicationExists.isApplicationNameExit) {
           let isReleaseExists = isApplicationExists.isReleaseNumberExit
           if (isReleaseExists) {
@@ -210,7 +210,7 @@ exports.approveBasicAuthRequest = function (body) {
  *
  * body V1_bequeathyourdataanddie_body 
  * user String User identifier from the system starting the service call
- * originator String 'Identification for the system consuming the API, as defined in  [/core-model-1-4:control-construct/logical-termination-point={uuid}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-capability/application-name]' 
+ * originator String 'Identification for the system consuming the API, as defined in  [/core-model-1-4:l-construct/logical-termination-point={uuid}/layer-protocol=0/http-client-interface-1-0:http-client-interface-pac/http-client-interface-capability/application-name]' 
  * xCorrelator String UUID for the service execution flow that allows to correlate requests and responses
  * traceIndicator String Sequence of request numbers along the flow
  * customerJourney String Holds information supporting customer’s journey to which the execution applies
@@ -404,7 +404,7 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       let tcpServerList = [new TcpObject(body["protocol"], body["address"], body["port"])];
       let inquireOamRequestOperation = "/v1/inquire-oam-request-approvals";
       let stringProfileList = await stringProfile.getStringProfile('aa-2-1-2-string-p-001')
-      let inquireBasicAuthRequestOperation=stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
+      let inquireBasicAuthRequestOperation = stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
       let operationNamesByAttributes = new Map();
       operationNamesByAttributes.set("inquire-oam-request-approvals", inquireOamRequestOperation);
       operationNamesByAttributes.set("inquire-basic-auth-approvals", inquireBasicAuthRequestOperation);
@@ -470,12 +470,12 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
           customerJourney
         );
       });
-      
-       let lengthOftheForwarding = forwardingAutomationInputList.length
-      let headers = { user, xCorrelator, traceIndicator, customerJourney ,lengthOftheForwarding}
+
+      let lengthOftheForwarding = forwardingAutomationInputList.length
+      let headers = { user, xCorrelator, traceIndicator, customerJourney, lengthOftheForwarding }
       let Result = await RegardApplication.RegardapplicationUpdate(applicationName, releaseNumber, headers);
       var response = {};
-      if (Result.sucess) {
+      if (Result.success) {
         response['application/json'] = {
           "successfully-connected": true
         };
@@ -483,7 +483,7 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       else {
         response['application/json'] = {
           "successfully-connected": false,
-          "reason-of-failure": Result.reasonforFaliure
+          "reason-of-failure": Result.reasonForFailure
         };
       }
 
@@ -494,6 +494,7 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
         resolve();
       }
     }
+
     catch (error) {
       reject(error);
     }

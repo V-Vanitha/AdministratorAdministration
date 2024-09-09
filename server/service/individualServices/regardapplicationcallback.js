@@ -11,7 +11,7 @@ const FcPort = require('onf-core-model-ap/applicationPattern/onfModel/models/FcP
 const forwardingConstructAutomationInput = require('onf-core-model-ap/applicationPattern/onfModel/services/models/forwardingConstruct/AutomationInput');
 const httpClientInterface = require('onf-core-model-ap/applicationPattern/onfModel/models/layerProtocols/HttpClientInterface');
 const logicalTerminationPoint = require('onf-core-model-ap/applicationPattern/onfModel/models/LogicalTerminationPoint');
-const stringProfile= require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
+const stringProfile = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
 
 exports.CreateLinkForInquiringBasicAuthApprovals = async function (applicationName, releaseNumber, reqheaders) {
     return new Promise(async function (resolve, reject) {
@@ -19,8 +19,8 @@ exports.CreateLinkForInquiringBasicAuthApprovals = async function (applicationNa
             let InquiringOamRequestCreateLinkForwardingName = "RegardApplicationCausesSequenceForInquiringBasicAuthRequestApprovals.CreateLinkForInquiringBasicAuthApprovals";
             let InquiringOamRequestCreateLinkRequestBody = {};
             let stringProfileList = await stringProfile.getStringProfile('aa-2-1-2-string-p-001')
-           let inquireBasicAuthOperationName=stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
-           
+            let inquireBasicAuthOperationName = stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
+
             InquiringOamRequestCreateLinkRequestBody.servingApplicationName = applicationName;
             InquiringOamRequestCreateLinkRequestBody.servingApplicationReleaseNumber = releaseNumber;
             InquiringOamRequestCreateLinkRequestBody.operationName = inquireBasicAuthOperationName;
@@ -41,9 +41,8 @@ exports.CreateLinkForInquiringBasicAuthApprovals = async function (applicationNa
                 reqheaders.customerJourney
 
             )
-           
-            resolve(response.data)
-            
+            resolve(response)
+
         }
         catch (error) {
             reject(error);
@@ -117,7 +116,7 @@ exports.CreateLinkForApprovingBasicAuthRequests = async function (applicationNam
                 reqheaders.customerJourney
 
             )
-            resolve(response.data)
+            resolve(response)
         }
 
         catch (error) {
@@ -151,7 +150,7 @@ exports.CreateLinkForInquiringOamApprovals = async function (applicationName, re
                 reqheaders.traceIndicator + "." + reqheaders.traceIndicatorIncrementer++,
                 reqheaders.customerJourney
             )
-            resolve(response.data)
+            resolve(response)
         }
 
         catch (error) {
@@ -227,7 +226,7 @@ exports.CreateLinkForApprovingOamRequests = async function (applicationName, rel
                 reqheaders.customerJourney
 
             )
-            resolve(response.data)
+            resolve(response)
         }
         catch (error) {
             reject(error);
