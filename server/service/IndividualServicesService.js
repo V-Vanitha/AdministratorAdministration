@@ -404,7 +404,7 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       let tcpServerList = [new TcpObject(body["protocol"], body["address"], body["port"])];
       let inquireOamRequestOperation = "/v1/inquire-oam-request-approvals";
       let stringProfileList = await stringProfile.getStringProfile('aa-2-1-2-string-p-001')
-      let inquireBasicAuthRequestOperation=stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
+      let inquireBasicAuthRequestOperation = stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
       let operationNamesByAttributes = new Map();
       operationNamesByAttributes.set("inquire-oam-request-approvals", inquireOamRequestOperation);
       operationNamesByAttributes.set("inquire-basic-auth-approvals", inquireBasicAuthRequestOperation);
@@ -470,12 +470,12 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
           customerJourney
         );
       });
-      
-       let lengthOftheForwarding = forwardingAutomationInputList.length
-      let headers = { user, xCorrelator, traceIndicator, customerJourney ,lengthOftheForwarding}
+
+      let lengthOftheForwarding = forwardingAutomationInputList.length
+      let headers = { user, xCorrelator, traceIndicator, customerJourney, lengthOftheForwarding }
       let Result = await RegardApplication.RegardapplicationUpdate(applicationName, releaseNumber, headers);
       var response = {};
-      if (Result.sucess) {
+      if (Result.success) {
         response['application/json'] = {
           "successfully-connected": true
         };
@@ -483,23 +483,22 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       else {
         response['application/json'] = {
           "successfully-connected": false,
-          "reason-of-failure": Result.reasonforFaliure
+          "reason-of-failure": Result.reasonForFailure
         };
       }
 
       if (Object.keys(response).length > 0) {
-        console.log(response[Object.keys(response)])
         resolve(response[Object.keys(response)[0]]);
       } else {
         resolve();
       }
     }
+
     catch (error) {
       reject(error);
     }
   });
 }
-
 /****************************************************************************************
  * Functions utilized by individual services
  ****************************************************************************************/
