@@ -6,9 +6,9 @@ const Integerprofile = require('onf-core-model-ap/applicationPattern/onfModel/mo
 const FcPort = require('onf-core-model-ap/applicationPattern/onfModel/models/FcPort');
 const operationKeyUpdateNotificationService = require('onf-core-model-ap/applicationPattern/onfModel/services/OperationKeyUpdateNotificationService');
 const ProfileCollection = require('onf-core-model-ap/applicationPattern/onfModel/models/ProfileCollection');
-const onfAttributes= require('onf-core-model-ap/applicationPattern/onfModel/constants/OnfAttributes')
+const onfAttributes = require('onf-core-model-ap/applicationPattern/onfModel/constants/OnfAttributes')
 const INQUIRE_FORWARDING_NAME = "RegardApplicationCausesSequenceForInquiringBasicAuthRequestApprovals.RequestForInquiringBasicAuthApprovals"
-const StringProfile=require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
+const StringProfile = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
 
 exports.RegardapplicationUpdate = async function (applicationName, releaseNumber, reqheaders) {
     let result = {}
@@ -114,7 +114,7 @@ async function FinalResult(Response) {
             result.success = Response["client-successfully-added"]
         } else {
             result.success = Response["client-successfully-added"],
-            result.reasonForFailure = `AA_${Response['reason-of-failure']}`;
+                result.reasonForFailure = `AA_${Response['reason-of-failure']}`;
         }
 
     }
@@ -124,7 +124,7 @@ async function FinalResult(Response) {
             result.success = true
         } else {
             result.success = false,
-            result.reasonForFailure = `AA_${responseData['reason-of-failure']}`;
+                result.reasonForFailure = `AA_${responseData['reason-of-failure']}`;
         }
     }
     else if (responseCode.toString() == "408") {
@@ -143,7 +143,7 @@ async function FinalResult(Response) {
     }
     else if (responseCode.toString().startsWith("5") || responseCode.toString().startsWith("4")) {
         result.success = false,
-        result.reasonForFailure = "AA_UNKNOWN";
+            result.reasonForFailure = "AA_UNKNOWN";
     }
     return result;
 }
@@ -174,27 +174,25 @@ async function GetOperationClient(forwardingName, applicationName, releaseNumber
 
 
 
-exports.getStringValueAndPattern = async function(stringProfilename) {
-    let StringValue ;
-    let StringProfilePattern;
+exports.getStringValueAndPattern = async function (stringProfilename) {
+    let stringValue;
+    let stringProfilePattern;
     let profileList = await ProfileCollection.getProfileListForProfileNameAsync(StringProfile.profileName);
     if (profileList === undefined) {
         return undefined;
     }
-  for(let profile of profileList){
-    let  StringProfilePac = profile[onfAttributes.STRING_PROFILE.PAC]
-    let StringProfileCapability = StringProfilePac[onfAttributes.STRING_PROFILE.CAPABILITY]
-    let StringName=StringProfileCapability[onfAttributes.STRING_PROFILE.STRING_NAME]
-   StringProfilePattern=StringProfileCapability[onfAttributes.STRING_PROFILE.PATTERN]
-  let StringProfileConfiguration = StringProfilePac[onfAttributes.STRING_PROFILE.CONFIGURATION]
-   StringValue = StringProfileConfiguration[onfAttributes.STRING_PROFILE.STRING_VALUE]
-    if(StringName == stringProfilename){
-  return {
-  StringValue,
-  StringProfilePattern
-  
-  }
-  }
-  }
-  
-  }
+    for (let profile of profileList) {
+        let stringProfilePac = profile[onfAttributes.STRING_PROFILE.PAC]
+        let stringProfileCapability = stringProfilePac[onfAttributes.STRING_PROFILE.CAPABILITY]
+        let stringName = stringProfileCapability[onfAttributes.STRING_PROFILE.STRING_NAME]
+        stringProfilePattern = stringProfileCapability[onfAttributes.STRING_PROFILE.PATTERN]
+        let StringProfileConfiguration = stringProfilePac[onfAttributes.STRING_PROFILE.CONFIGURATION]
+        stringValue = StringProfileConfiguration[onfAttributes.STRING_PROFILE.STRING_VALUE]
+        if (stringName == stringProfilename) {
+            return {
+                stringValue
+            }
+        }
+    }
+
+}
