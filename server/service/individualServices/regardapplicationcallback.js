@@ -11,15 +11,15 @@ const FcPort = require('onf-core-model-ap/applicationPattern/onfModel/models/FcP
 const forwardingConstructAutomationInput = require('onf-core-model-ap/applicationPattern/onfModel/services/models/forwardingConstruct/AutomationInput');
 const httpClientInterface = require('onf-core-model-ap/applicationPattern/onfModel/models/layerProtocols/HttpClientInterface');
 const logicalTerminationPoint = require('onf-core-model-ap/applicationPattern/onfModel/models/LogicalTerminationPoint');
-const stringProfileInstance = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
+const stringProfileInstance = require('./RegardApplication')
 
 exports.CreateLinkForInquiringBasicAuthApprovals = async function (applicationName, releaseNumber, reqheaders) {
     return new Promise(async function (resolve, reject) {
         try {
             let InquiringOamRequestCreateLinkForwardingName = "RegardApplicationCausesSequenceForInquiringBasicAuthRequestApprovals.CreateLinkForInquiringBasicAuthApprovals";
             let InquiringOamRequestCreateLinkRequestBody = {};
-            let stringProfile = await stringProfileInstance.getStringProfile('aa-2-1-2-string-p-001')
-            let inquireBasicAuthOperationName = stringProfile["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
+            let stringProfile = await stringProfileInstance.getStringValueAndPattern('NameOfOperationForInquiringApprovals')
+            let inquireBasicAuthOperationName = stringProfile["StringValue"]
 
             InquiringOamRequestCreateLinkRequestBody.servingApplicationName = applicationName;
             InquiringOamRequestCreateLinkRequestBody.servingApplicationReleaseNumber = releaseNumber;

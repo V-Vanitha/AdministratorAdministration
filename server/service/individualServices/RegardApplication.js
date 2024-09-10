@@ -5,8 +5,10 @@ const Regardapplicationcallback = require('./regardapplicationcallback');
 const Integerprofile = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/IntegerProfile')
 const FcPort = require('onf-core-model-ap/applicationPattern/onfModel/models/FcPort');
 const operationKeyUpdateNotificationService = require('onf-core-model-ap/applicationPattern/onfModel/services/OperationKeyUpdateNotificationService');
-
+const ProfileCollection = require('onf-core-model-ap/applicationPattern/onfModel/models/ProfileCollection');
+const onfAttributes= require('onf-core-model-ap/applicationPattern/onfModel/constants/OnfAttributes')
 const INQUIRE_FORWARDING_NAME = "RegardApplicationCausesSequenceForInquiringBasicAuthRequestApprovals.RequestForInquiringBasicAuthApprovals"
+const StringProfile=require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
 
 exports.RegardapplicationUpdate = async function (applicationName, releaseNumber, reqheaders) {
     let result = {}
@@ -169,3 +171,30 @@ async function GetOperationClient(forwardingName, applicationName, releaseNumber
     }
     return undefined;
 }
+
+
+
+exports.getStringValueAndPattern = async function(stringProfilename) {
+    let StringValue ;
+    let StringProfilePattern;
+    let profileList = await ProfileCollection.getProfileListForProfileNameAsync(StringProfile.profileName);
+    if (profileList === undefined) {
+        return undefined;
+    }
+  for(let profile of profileList){
+    let  StringProfilePac = profile[onfAttributes.STRING_PROFILE.PAC]
+    let StringProfileCapability = StringProfilePac[onfAttributes.STRING_PROFILE.CAPABILITY]
+    let StringName=StringProfileCapability[onfAttributes.STRING_PROFILE.STRING_NAME]
+   StringProfilePattern=StringProfileCapability[onfAttributes.STRING_PROFILE.PATTERN]
+  let StringProfileConfiguration = StringProfilePac[onfAttributes.STRING_PROFILE.CONFIGURATION]
+   StringValue = StringProfileConfiguration[onfAttributes.STRING_PROFILE.STRING_VALUE]
+    if(StringName == stringProfilename){
+  return {
+  StringValue,
+  StringProfilePattern
+  
+  }
+  }
+  }
+  
+  }

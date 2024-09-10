@@ -1,7 +1,7 @@
 'use strict';
 const fileOperation = require('../node_modules/onf-core-model-ap/applicationPattern/databaseDriver/JSONDriver');
 
-const stringProfile = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
+const stringProfile = require('./individualServices/RegardApplication')
 /**
  * Returns the enumeration values of the String
  *
@@ -79,8 +79,8 @@ exports.putStringProfileStringValue = async function (url, body) {
   return new Promise(async function (resolve, reject) {
     try {
       let stringValue = body["string-profile-1-0:string-value"]
-      let stringProfileList = await stringProfile.getStringProfile('aa-2-1-2-string-p-001')
-      let stringProfilePattern = stringProfileList["stringProfilePac"]["stringProfileCapability"]['pattern']
+      let stringProfileList = await stringProfile.getStringValueAndPattern('NameOfOperationForInquiringApprovals')
+      let stringProfilePattern = stringProfileList['StringProfilePattern']
       const result = new RegExp(stringProfilePattern, 'g').test(stringValue)
       if (result) {
         await fileOperation.writeToDatabaseAsync(url, body, false);
