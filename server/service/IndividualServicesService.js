@@ -18,7 +18,7 @@ const AdministratorCredentialList = require('./individualServices/AuthorizationA
 const createHttpError = require('http-errors');
 const TcpObject = require('onf-core-model-ap/applicationPattern/onfModel/services/models/TcpObject');
 const RegardApplication = require('./individualServices/RegardApplication')
-const stringProfile= require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
+const stringProfileInstance= require('onf-core-model-ap/applicationPattern/onfModel/models/profile/StringProfile')
 const NEW_RELEASE_FORWARDING_NAME = 'PromptForBequeathingDataCausesTransferOfListOfApplications';
 const AsyncLock = require('async-lock');
 const lock = new AsyncLock();
@@ -55,8 +55,8 @@ exports.approveOamRequest = function (body) {
       if (isAuthorizationExistValue && isFileExist) {
 
         let isApplicationExists = await AdministratorCredentialList.IsApplicationExists(applicationName,applicationReleaseNumber, authorization)
-        if (isApplicationExists.isApplicationNameExit) {
-          let isReleaseExists = isApplicationExists.isReleaseNumberExit
+        if (isApplicationExists.isApplicationNameExist) {
+          let isReleaseExists = isApplicationExists.isReleaseNumberExist
           if (isReleaseExists) {
             let isAuthorized = await AdministratorCredentialList.isAuthorizedAsync(applicationName, authorization, method)
 
@@ -137,8 +137,8 @@ exports.approveBasicAuthRequest = function (body) {
       if (isAuthorizationExistValue && isFileExist) {
 
         let isApplicationExists = await AdministratorCredentialList.IsApplicationExists(applicationName, applicationReleaseNumber, authorization)
-        if (isApplicationExists.isApplicationNameExit) {
-          let isReleaseExists = isApplicationExists.isReleaseNumberExit
+        if (isApplicationExists.isApplicationNameExist) {
+          let isReleaseExists = isApplicationExists.isReleaseNumberExist
           if (isReleaseExists) {
 
             let isAuthorized = await AdministratorCredentialList.isAuthorizedAsync(applicationName, authorization, method)
@@ -403,8 +403,8 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       let releaseNumber = body["release-number"];
       let tcpServerList = [new TcpObject(body["protocol"], body["address"], body["port"])];
       let inquireOamRequestOperation = "/v1/inquire-oam-request-approvals";
-      let stringProfileList = await stringProfile.getStringProfile('aa-2-1-2-string-p-001')
-      let inquireBasicAuthRequestOperation = stringProfileList["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
+      let stringProfile = await stringProfileInstance.getStringProfile('aa-2-1-2-string-p-001')
+      let inquireBasicAuthRequestOperation = stringProfile["stringProfilePac"]["stringProfileConfiguration"]["stringValue"]
       let operationNamesByAttributes = new Map();
       operationNamesByAttributes.set("inquire-oam-request-approvals", inquireOamRequestOperation);
       operationNamesByAttributes.set("inquire-basic-auth-approvals", inquireBasicAuthRequestOperation);
