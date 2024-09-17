@@ -106,20 +106,20 @@ async function InquiringOamApprovals(applicationName, releaseNumber, reqheaders)
 
 
 
-async function FinalResult(Response) {
+async function FinalResult(response) {
     let result = {};
-    let responseCode = Response.status;
+    let responseCode = response.status;
     if (responseCode == undefined) {
-        if (Response["client-successfully-added"]) {
-            result.success = Response["client-successfully-added"]
+        if (response["client-successfully-added"]) {
+            result.success = response["client-successfully-added"]
         } else {
-            result.success = Response["client-successfully-added"],
-                result.reasonForFailure = `AA_${Response['reason-of-failure']}`;
+            result.success = response["client-successfully-added"],
+                result.reasonForFailure = `AA_${response['reason-of-failure']}`;
         }
 
     }
     else if (responseCode.toString().startsWith("2")) {
-        let responseData = Response.data
+        let responseData = response.data
         if (responseData['client-successfully-added'] == true) {
             result.success = true
         } else {
@@ -128,8 +128,8 @@ async function FinalResult(Response) {
         }
     }
     else if (responseCode.toString() == "408") {
-        let Url = Response.url.split("/")
-        let operationName = Url[Url.length - 1]
+        let urlPath = response.url.split("/")
+        let operationName = urlPath[urlPath.length - 1]
 
         if (operationName == "add-operation-client-to-link") {
             result.success = false;
@@ -176,7 +176,6 @@ async function GetOperationClient(forwardingName, applicationName, releaseNumber
 
 exports.getStringValueAndPattern = async function (stringProfilename) {
     let stringValue;
-    let stringProfilePattern;
     let profileList = await ProfileCollection.getProfileListForProfileNameAsync(StringProfile.profileName);
     if (profileList === undefined) {
         return undefined;
@@ -185,7 +184,7 @@ exports.getStringValueAndPattern = async function (stringProfilename) {
         let stringProfilePac = profile[onfAttributes.STRING_PROFILE.PAC]
         let stringProfileCapability = stringProfilePac[onfAttributes.STRING_PROFILE.CAPABILITY]
         let stringName = stringProfileCapability[onfAttributes.STRING_PROFILE.STRING_NAME]
-        stringProfilePattern = stringProfileCapability[onfAttributes.STRING_PROFILE.PATTERN]
+        let stringProfilePattern = stringProfileCapability[onfAttributes.STRING_PROFILE.PATTERN]
         let StringProfileConfiguration = stringProfilePac[onfAttributes.STRING_PROFILE.CONFIGURATION]
         stringValue = StringProfileConfiguration[onfAttributes.STRING_PROFILE.STRING_VALUE]
         if (stringName == stringProfilename) {

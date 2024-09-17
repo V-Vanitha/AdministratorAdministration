@@ -8,7 +8,7 @@ const onfAttributes= require('onf-core-model-ap/applicationPattern/onfModel/cons
 const administratorList = 'administrator-credential-list';
 const allowedSccess = "allowed-access";
 const authorizationValue = 'auth-code';
-const FileprofileOperation = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/FileProfile')
+const fileProfileOperation = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/FileProfile')
 /**
  * @description This function returns the approval status for the provided application .
  * @param {String} authorization : authorization code of the user , value should be Bse64 Encoding of username and password 
@@ -19,7 +19,7 @@ exports.isAuthorizationExistAsync = async function (authorization) {
     let isFileExit = false;
 
     try {
-        let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent()
+        let applicationDataFile = await fileProfileOperation.getApplicationDataFileContent()
         if (applicationDataFile !== undefined) {
             isFileExit = true;
             let applicationData = JSON.parse(fs.readFileSync(applicationDataFile, 'utf8'));
@@ -52,7 +52,7 @@ exports.isAuthorizationExistAsync = async function (authorization) {
  **/
 exports.isAuthorizedAsync = async function (applicationName, authorization, allowedMethods) {
     try {
-        let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent()
+        let applicationDataFile = await fileProfileOperation.getApplicationDataFileContent()
         if (applicationDataFile !== undefined) {
             let applicationData = JSON.parse(fs.readFileSync(applicationDataFile, 'utf8'));
             if (applicationData[administratorList]) {
@@ -84,7 +84,7 @@ exports.isOpeartionisExistAsync = async function (applicationName, operationName
     let isoperationExit = false;
 
     try {
-        let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent()
+        let applicationDataFile = await fileProfileOperation.getApplicationDataFileContent()
         if (applicationDataFile !== undefined) {
             let applicationData = JSON.parse(fs.readFileSync(applicationDataFile, 'utf8'));
             if (applicationData[administratorList]) {
@@ -220,7 +220,7 @@ exports.IsApplicationExists = async function (applicationName, releaseNumber,aut
     let  isReleaseNumberExist = false
 
     try {
-        let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent()
+        let applicationDataFile = await fileProfileOperation.getApplicationDataFileContent()
         if (applicationDataFile !== undefined) {
             let applicationData = JSON.parse(fs.readFileSync(applicationDataFile, 'utf8'));
             const isApplicationExistsInTheConfigFile= await getApplicationandReleaseNumberAtConfigFile(applicationName,releaseNumber)
@@ -255,7 +255,7 @@ exports.IsApplicationExists = async function (applicationName, releaseNumber,aut
 async function isApplicationNameExistAtLoadFile(applicationName, authorization) {
     let isApplicationNameExist = {};
     try {
-        let applicationDataFile = await FileprofileOperation.getApplicationDataFileContent();
+        let applicationDataFile = await fileProfileOperation.getApplicationDataFileContent();
         if (applicationDataFile !== undefined) {
             let applicationData = JSON.parse(fs.readFileSync(applicationDataFile, 'utf8'));
             if (applicationData[administratorList]) {
