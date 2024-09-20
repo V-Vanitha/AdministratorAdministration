@@ -9,6 +9,7 @@ const administratorList = 'administrator-credential-list';
 const allowedSccess = "allowed-access";
 const authorizationValue = 'auth-code';
 const fileProfileOperation = require('onf-core-model-ap/applicationPattern/onfModel/models/profile/FileProfile')
+const layerProtocol = require('onf-core-model-ap/applicationPattern/onfModel/models/LayerProtocol');
 /**
  * @description This function returns the approval status for the provided application .
  * @param {String} authorization : authorization code of the user , value should be Bse64 Encoding of username and password 
