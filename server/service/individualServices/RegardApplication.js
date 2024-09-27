@@ -91,7 +91,7 @@ exports.RegardapplicationUpdate = async function (applicationName, releaseNumber
 
 async function InquiringOamApprovals(applicationName, releaseNumber, reqheaders) {
     let createLinkForInquiringOamApprovalsrequest = await Regardapplicationcallback.CreateLinkForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
-    if (createLinkForInquiringOamApprovalsrequest.status.toString().startsWith('2') && CreateLinkForInquiringOamApprovalsrequest.data['client-successfully-added'] == true) {
+    if (createLinkForInquiringOamApprovalsrequest.status.toString().startsWith('2') && createLinkForInquiringOamApprovalsrequest.data['client-successfully-added'] == true) {
         let requestForInquiringOamApprovals = await Regardapplicationcallback.RequestForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
         let responseCode = requestForInquiringOamApprovals.status;
         if (responseCode.toString().startsWith("2")) {
@@ -108,20 +108,20 @@ async function InquiringOamApprovals(applicationName, releaseNumber, reqheaders)
 
 
 async function FinalResult(response) {
-    let result = { successConnected: false };
+    let result = { successfullyConnected: false };
     let responseCode = response.status;
     if (responseCode == undefined) {
         if (response["client-successfully-added"]) {
-            result.successConnected = response["client-successfully-added"]
+            result.successfullyConnected = response["client-successfully-added"]
         } else {
-            result.successConnected = response["client-successfully-added"],
+            result.successfullyConnected = response["client-successfully-added"],
                 result.reasonForFailure = `AA_${response['reason-of-failure']}`;
         }
     }
     else if (responseCode.toString().startsWith("2")) {
         let responseData = response.data
         if (responseData['client-successfully-added'] == true) {
-            result.successConnected = true
+            result.successfullyConnected = true
         } else {
             result.reasonForFailure = `AA_${responseData['reason-of-failure']}`;
         }

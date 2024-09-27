@@ -474,7 +474,7 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       let headers = { user, xCorrelator, traceIndicator, customerJourney, lengthOftheForwarding }
       let Result = await RegardApplication.RegardapplicationUpdate(applicationName, releaseNumber, headers);
       var response = {};
-      if (Result.successConnected) {
+      if (Result.successfullyConnected) {
         response['application/json'] = {
           "successfully-connected": true
         };
