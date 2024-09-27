@@ -90,18 +90,18 @@ exports.RegardapplicationUpdate = async function (applicationName, releaseNumber
 
 
 async function InquiringOamApprovals(applicationName, releaseNumber, reqheaders) {
-    let createLinkForInquiringOamApprovalsrequest = await Regardapplicationcallback.CreateLinkForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
-    if (createLinkForInquiringOamApprovalsrequest.status.toString().startsWith('2') && createLinkForInquiringOamApprovalsrequest.data['client-successfully-added'] == true) {
+    let createLinkForInquiringOamApprovalsRequest = await Regardapplicationcallback.CreateLinkForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
+    if (createLinkForInquiringOamApprovalsRequest.status.toString().startsWith('2') && createLinkForInquiringOamApprovalsRequest.data['client-successfully-added'] == true) {
         let requestForInquiringOamApprovals = await Regardapplicationcallback.RequestForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
         let responseCode = requestForInquiringOamApprovals.status;
         if (responseCode.toString().startsWith("2")) {
-            const createLinkForInquiringOamApprovalsrquest = await Regardapplicationcallback.CreateLinkForApprovingOamRequests(applicationName, releaseNumber, reqheaders)
-            return (createLinkForInquiringOamApprovalsrquest)
+          const createLinkForApprovingOamRequest= await Regardapplicationcallback.CreateLinkForApprovingOamRequests(applicationName, releaseNumber, reqheaders)
+            return (createLinkForApprovingOamRequest)
         } else {
             return (requestForInquiringOamApprovals)
         }
     } else {
-        return createLinkForInquiringOamApprovalsrequest
+        return createLinkForInquiringOamApprovalsRequest
     }
 }
 
