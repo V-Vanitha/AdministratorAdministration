@@ -19,7 +19,7 @@ exports.CreateLinkForInquiringBasicAuthApprovals = async function (applicationNa
             let inquiringOamRequestCreateLinkForwardingName = "RegardApplicationCausesSequenceForInquiringBasicAuthRequestApprovals.CreateLinkForInquiringBasicAuthApprovals";
             let inquiringOamRequestCreateLinkRequestBody = {};
             let stringProfile = await stringProfileInstance.getStringValueAndPattern('NameOfOperationForInquiringApprovals')
-            let inquireBasicAuthOperationName = stringProfile["StringValue"]
+            let inquireBasicAuthOperationName = stringProfile.stringValue
 
             inquiringOamRequestCreateLinkRequestBody.servingApplicationName = applicationName;
             inquiringOamRequestCreateLinkRequestBody.servingApplicationReleaseNumber = releaseNumber;

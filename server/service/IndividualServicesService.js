@@ -403,7 +403,7 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       let tcpServerList = [new TcpObject(body["protocol"], body["address"], body["port"])];
       let inquireOamRequestOperation = "/v1/inquire-oam-request-approvals";
       let stringProfile = await RegardApplication.getStringValueAndPattern('NameOfOperationForInquiringApprovals')
-      let inquireBasicAuthRequestOperation = stringProfile["StringValue"]
+      let inquireBasicAuthRequestOperation = stringProfile.stringValue
       let operationNamesByAttributes = new Map();
       operationNamesByAttributes.set("inquire-oam-request-approvals", inquireOamRequestOperation);
       operationNamesByAttributes.set("inquire-basic-auth-approvals", inquireBasicAuthRequestOperation);
@@ -474,7 +474,7 @@ exports.regardApplication = async function (body, user, originator, xCorrelator,
       let headers = { user, xCorrelator, traceIndicator, customerJourney, lengthOftheForwarding }
       let Result = await RegardApplication.RegardapplicationUpdate(applicationName, releaseNumber, headers);
       var response = {};
-      if (Result.success) {
+      if (Result.successfullyConnected) {
         response['application/json'] = {
           "successfully-connected": true
         };

@@ -31,11 +31,11 @@ exports.RegardapplicationUpdate = async function (applicationName, releaseNumber
 
                     let waitUntilOperationKeyIsUpdatedValue = await operationKeyUpdateNotificationService.waitUntilOperationKeyIsUpdated(opclinetUuid, time, maxwaitingperiod);
                     if (!waitUntilOperationKeyIsUpdatedValue) {
-                        result["client-successfully-added"] = false
-                        result["reason-of-failure"] = "MAXIMUM_WAIT_TIME_TO_RECEIVE_OPERATION_KEY_EXCEEDED"
+                        result.data["client-successfully-added"] = false
+                        result.data["reason-of-failure"] = "MAXIMUM_WAIT_TIME_TO_RECEIVE_OPERATION_KEY_EXCEEDED"
                     } else {
-                        const RequestForInquiringBasicAuthApprovalsreq = await Regardapplicationcallback.RequestForInquiringBasicAuthApprovals(applicationName, releaseNumber, reqheaders)
-                        if (!RequestForInquiringBasicAuthApprovalsreq) {
+                        const requestForInquiringBasicAuthApprovalsreq = await Regardapplicationcallback.RequestForInquiringBasicAuthApprovals(applicationName, releaseNumber, reqheaders)
+                        if (!requestForInquiringBasicAuthApprovalsreq) {
                             result = await InquiringOamApprovals(applicationName, releaseNumber, reqheaders)
                         } else {
                             let attempt = 1;
@@ -58,10 +58,10 @@ exports.RegardapplicationUpdate = async function (applicationName, releaseNumber
                                         const operationServerUuidOfApproveBasicAuthRequest = "aa-2-1-2-op-s-is-005";
                                         let waitUntilOperationKeyIsUpdatedValue = await operationKeyUpdateNotificationService.waitUntilOperationKeyIsUpdated(operationServerUuidOfApproveBasicAuthRequest, time, maxwaitingperiod);
                                         if (!waitUntilOperationKeyIsUpdatedValue) {
-                                            result['client-successfully-added'] = false
-                                            result["reason-of-failure"] = "MAXIMUM_WAIT_TIME_TO_RECEIVE_OPERATION_KEY_EXCEEDED"
+                                            result.data['client-successfully-added'] = false
+                                            result.data["reason-of-failure"] = "MAXIMUM_WAIT_TIME_TO_RECEIVE_OPERATION_KEY_EXCEEDED"
                                         } else {
-                                            result['client-successfully-added'] = true
+                                            result.data['client-successfully-added'] = true
                                         }
                                     }
                                 }
@@ -88,67 +88,63 @@ exports.RegardapplicationUpdate = async function (applicationName, releaseNumber
     });
 }
 
+
 async function InquiringOamApprovals(applicationName, releaseNumber, reqheaders) {
-    const CreateLinkForInquiringOamApprovalsrequest = await Regardapplicationcallback.CreateLinkForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
-    if (CreateLinkForInquiringOamApprovalsrequest.status.toString().startsWith('2') && CreateLinkForInquiringOamApprovalsrequest['client-successfully-added'] == true) {
-        const CreateLinkForInquiringOamApprovalsrequest = await Regardapplicationcallback.RequestForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
-        let responseCode = CreateLinkForInquiringOamApprovalsrequest.status;
+    let createLinkForInquiringOamApprovalsRequest = await Regardapplicationcallback.CreateLinkForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
+    if (createLinkForInquiringOamApprovalsRequest.status.toString().startsWith('2') && createLinkForInquiringOamApprovalsRequest.data['client-successfully-added'] == true) {
+        let requestForInquiringOamApprovals = await Regardapplicationcallback.RequestForInquiringOamApprovals(applicationName, releaseNumber, reqheaders)
+        let responseCode = requestForInquiringOamApprovals.status;
         if (responseCode.toString().startsWith("2")) {
-            const CreateLinkForInquiringOamApprovalsrquest = await Regardapplicationcallback.CreateLinkForApprovingOamRequests(applicationName, releaseNumber, reqheaders)
-            return (CreateLinkForInquiringOamApprovalsrquest)
+          const createLinkForApprovingOamRequest= await Regardapplicationcallback.CreateLinkForApprovingOamRequests(applicationName, releaseNumber, reqheaders)
+            return (createLinkForApprovingOamRequest)
         } else {
-            return (CreateLinkForInquiringOamApprovalsrequest)
+            return (requestForInquiringOamApprovals)
         }
     } else {
-        return CreateLinkForInquiringOamApprovalsrequest
+        return createLinkForInquiringOamApprovalsRequest
     }
 }
 
 
 
 async function FinalResult(response) {
-    let result = {};
+    let result = { successfullyConnected: false };
     let responseCode = response.status;
     if (responseCode == undefined) {
         if (response["client-successfully-added"]) {
-            result.success = response["client-successfully-added"]
+            result.successfullyConnected = response["client-successfully-added"]
         } else {
-            result.success = response["client-successfully-added"],
+            result.successfullyConnected = response["client-successfully-added"],
                 result.reasonForFailure = `AA_${response['reason-of-failure']}`;
         }
-
     }
     else if (responseCode.toString().startsWith("2")) {
         let responseData = response.data
         if (responseData['client-successfully-added'] == true) {
-            result.success = true
+            result.successfullyConnected = true
         } else {
-            result.success = false,
-                result.reasonForFailure = `AA_${responseData['reason-of-failure']}`;
+            result.reasonForFailure = `AA_${responseData['reason-of-failure']}`;
         }
     }
-    else if (responseCode.toString() == "408") {
+    else if (responseCode == 408 || responseCode == 503 || responseCode == 404) {
         let urlPath = response.url.split("/")
         let operationName = urlPath[urlPath.length - 1]
 
         if (operationName == "add-operation-client-to-link") {
-            result.success = false;
-            result.reasonForFailure = "AA_DID_NOT_REACH_ALT";
+        result.reasonForFailure = "AA_DID_NOT_REACH_ALT"}
+        else{
+            result.reasonForFailure = "AA_DID_NOT_REACH_NEW_APPLICATION"
         }
-        else {
-            result.success = false;
-            result.reasonForFailure = "AA_DID_NOT_REACH_ALT";
-        }
+    }
+    else if (responseCode.toString().startsWith("4")) {
+        result.reasonForFailure = "AA_UNKNOWN";
+    }
+    else if (responseCode.toString().startsWith("5")) {
+        result.reasonForFailure = "AA_ALT_UNKNOWN";
+    }
 
-    }
-    else if (responseCode.toString().startsWith("5") || responseCode.toString().startsWith("4")) {
-        result.success = false,
-            result.reasonForFailure = "AA_UNKNOWN";
-    }
     return result;
 }
-
-
 
 
 
