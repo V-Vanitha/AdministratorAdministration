@@ -14,7 +14,7 @@ const onfAttributes = require('onf-core-model-ap/applicationPattern/onfModel/con
 const FcPort = require('onf-core-model-ap/applicationPattern/onfModel/models/FcPort');
 const eventDispatcher = require('onf-core-model-ap/applicationPattern/rest/client/eventDispatcher');
 var traceIncrementer = 1;
-var isRequired = false;
+var isResponseRequired = false;
 
 /**
  * This method performs the set of procedure to transfer the data from this version to next version 
@@ -89,7 +89,7 @@ async function PromptForBequeathingDataCausesTransferOfListOfApplications(user, 
                      *   /v1/regard-application
                      ************************************************************************************/
                     let requestBody = {};
-                    isRequired = true;
+                    isResponseRequired = true;
                     requestBody.applicationName = applicationName;
                     requestBody.releaseNumber = releaseNumber;
                     requestBody.Address = applicationAddress;
@@ -103,8 +103,7 @@ async function PromptForBequeathingDataCausesTransferOfListOfApplications(user, 
                         xCorrelator,
                         traceIndicator + "." + traceIncrementer++,
                         customerJourney,
-                        undefined,
-                        isRequired 
+                        isResponseRequired 
                     );
                     if ((result.data && result.data["successfully-connected"] == false) || (!result.statusCode.toString().startsWith("2") )) {
                         throw forwardingKindNameOfTheBequeathOperation + "forwarding is not success for the input" + JSON.stringify(requestBody);
@@ -275,7 +274,7 @@ function getFcPortOutputLogicalTerminationPointList(forwardingConstructInstance)
  * @param {string} traceIndicator trace indicator of the request
  * @param {string} customerJourney customer journey of the request
  **/
-function forwardRequest(forwardingKindName, attributeList, user, xCorrelator, traceIndicator, customerJourney,isRequired) {
+function forwardRequest(forwardingKindName, attributeList, user, xCorrelator, traceIndicator, customerJourney,isResponseRequired) {
     return new Promise(async function (resolve, reject) {
         try {
             let forwardingConstructInstance = await ForwardingDomain.getForwardingConstructForTheForwardingNameAsync(forwardingKindName);
@@ -289,7 +288,7 @@ function forwardRequest(forwardingKindName, attributeList, user, xCorrelator, tr
                 customerJourney,
                 "POST",
                 undefined,
-                isRequired
+                isResponseRequired
             );
             resolve(result);
         } catch (error) {
